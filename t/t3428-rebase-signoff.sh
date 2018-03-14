@@ -59,7 +59,7 @@ test_expect_success 'rebase --exec --signoff adds a sign-off line' '
 	test_cmp expected-signed actual
 '
 
-test_expect_failure 'rebase --root --signoff adds a sign-off line' '
+test_expect_success 'rebase --root --signoff adds a sign-off line' '
 	git commit --amend -m "first" &&
 	git rebase --root --keep-empty --signoff &&
 	git cat-file commit HEAD^ | sed -e "1,/^\$/d" >actual &&

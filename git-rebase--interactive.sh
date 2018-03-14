@@ -900,7 +900,12 @@ then
 	revisions=$upstream...$orig_head
 	shortrevisions=$shortupstream..$shorthead
 else
-	revisions=$onto...$orig_head
+	if test -n "$squash_onto"
+	then
+		revisions=$orig_head
+	else
+		revisions=$onto...$orig_head
+	fi
 	shortrevisions=$shorthead
 fi
 if test t != "$preserve_merges"
