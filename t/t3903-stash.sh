@@ -1003,4 +1003,11 @@ test_expect_success 'stash -- <subdir> works with binary files' '
 	test_path_is_file subdir/untracked
 '
 
+test_expect_success 'stash -u -- <untracked> doesnt print error' '
+	>untracked &&
+	git stash push -u -- untracked 2>actual &&
+	test_path_is_missing untracked &&
+	test_line_count = 0 actual
+'
+
 test_done

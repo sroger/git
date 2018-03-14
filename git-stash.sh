@@ -313,7 +313,7 @@ push_stash () {
 			git clean --force --quiet -d $CLEAN_X_OPTION -- "$@"
 		fi
 
-		if test $# != 0
+		if test $# != 0 && git ls-files --error-unmatch -- "$@" >/dev/null 2>/dev/null
 		then
 			git add -u -- "$@" |
 			git checkout-index -z --force --stdin
