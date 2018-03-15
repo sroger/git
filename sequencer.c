@@ -138,6 +138,7 @@ static GIT_PATH_FUNC(rebase_path_refs_to_delete, "rebase-merge/refs-to-delete")
 static GIT_PATH_FUNC(rebase_path_gpg_sign_opt, "rebase-merge/gpg_sign_opt")
 static GIT_PATH_FUNC(rebase_path_orig_head, "rebase-merge/orig-head")
 static GIT_PATH_FUNC(rebase_path_verbose, "rebase-merge/verbose")
+static GIT_PATH_FUNC(rebase_path_signoff, "rebase-merge/signoff")
 static GIT_PATH_FUNC(rebase_path_head_name, "rebase-merge/head-name")
 static GIT_PATH_FUNC(rebase_path_onto, "rebase-merge/onto")
 static GIT_PATH_FUNC(rebase_path_autostash, "rebase-merge/autostash")
@@ -2094,6 +2095,11 @@ static int read_populate_opts(struct replay_opts *opts)
 
 		if (file_exists(rebase_path_verbose()))
 			opts->verbose = 1;
+
+		if (file_exists(rebase_path_signoff())) {
+			opts->allow_ff = 0;
+			opts->signoff = 1;
+		}
 
 		read_strategy_opts(opts, &buf);
 		strbuf_release(&buf);
