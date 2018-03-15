@@ -245,7 +245,7 @@ struct object *parse_object(const struct object_id *oid)
 	unsigned long size;
 	enum object_type type;
 	int eaten;
-	const unsigned char *repl = lookup_replace_object(oid->hash);
+	const struct object_id *repl = lookup_replace_object(oid);
 	void *buffer;
 	struct object *obj;
 
@@ -255,8 +255,8 @@ struct object *parse_object(const struct object_id *oid)
 
 	if ((obj && obj->type == OBJ_BLOB && has_object_file(oid)) ||
 	    (!obj && has_object_file(oid) &&
-	     sha1_object_info(oid->hash, NULL) == OBJ_BLOB)) {
-		if (check_sha1_signature(repl, NULL, 0, NULL) < 0) {
+	     oid_object_info(oid, NULL) == OBJ_BLOB)) {
+		if (check_object_signature(repl, NULL, 0, NULL) < 0) {
 			error("sha1 mismatch %s", oid_to_hex(oid));
 			return NULL;
 		}
@@ -264,11 +264,11 @@ struct object *parse_object(const struct object_id *oid)
 		return lookup_object(oid->hash);
 	}
 
-	buffer = read_sha1_file(oid->hash, &type, &size);
+	buffer = read_object_file(oid, &type, &size);
 	if (buffer) {
-		if (check_sha1_signature(repl, buffer, size, type_name(type)) < 0) {
+		if (check_object_signature(repl, buffer, size, type_name(type)) < 0) {
 			free(buffer);
-			error("sha1 mismatch %s", sha1_to_hex(repl));
+			error("sha1 mismatch %s", oid_to_hex(repl));
 			return NULL;
 		}
 

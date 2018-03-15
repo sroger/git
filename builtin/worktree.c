@@ -323,7 +323,7 @@ static int add_worktree(const char *path, const char *refname,
 		fprintf(stderr, _(", creating new branch '%s'"), opts->new_branch);
 
 	fprintf(stderr, _(", setting HEAD to %s"),
-		find_unique_abbrev(commit->object.oid.hash, DEFAULT_ABBREV));
+		find_unique_abbrev(&commit->object.oid, DEFAULT_ABBREV));
 
 	strbuf_reset(&sb);
 	pp_commit_easy(CMIT_FMT_ONELINE, commit, &sb);
@@ -522,7 +522,7 @@ static void show_worktree(struct worktree *wt, int path_maxlen, int abbrev_len)
 		strbuf_addstr(&sb, "(bare)");
 	else {
 		strbuf_addf(&sb, "%-*s ", abbrev_len,
-				find_unique_abbrev(wt->head_oid.hash, DEFAULT_ABBREV));
+				find_unique_abbrev(&wt->head_oid, DEFAULT_ABBREV));
 		if (wt->is_detached)
 			strbuf_addstr(&sb, "(detached HEAD)");
 		else if (wt->head_ref) {
@@ -547,7 +547,7 @@ static void measure_widths(struct worktree **wt, int *abbrev, int *maxlen)
 
 		if (path_len > *maxlen)
 			*maxlen = path_len;
-		sha1_len = strlen(find_unique_abbrev(wt[i]->head_oid.hash, *abbrev));
+		sha1_len = strlen(find_unique_abbrev(&wt[i]->head_oid, *abbrev));
 		if (sha1_len > *abbrev)
 			*abbrev = sha1_len;
 	}

@@ -267,7 +267,7 @@ const void *get_commit_buffer(const struct commit *commit, unsigned long *sizep)
 	if (!ret) {
 		enum object_type type;
 		unsigned long size;
-		ret = read_sha1_file(commit->object.oid.hash, &type, &size);
+		ret = read_object_file(&commit->object.oid, &type, &size);
 		if (!ret)
 			die("cannot read commit object %s",
 			    oid_to_hex(&commit->object.oid));
@@ -386,7 +386,7 @@ int parse_commit_gently(struct commit *item, int quiet_on_missing)
 		return 0;
 	if (parse_commit_in_graph(item))
 		return 0;
-	buffer = read_sha1_file(item->object.oid.hash, &type, &size);
+	buffer = read_object_file(&item->object.oid, &type, &size);
 	if (!buffer)
 		return quiet_on_missing ? -1 :
 			error("Could not read %s",
@@ -1209,7 +1209,7 @@ static void handle_signed_tag(struct commit *parent, struct commit_extra_header 
 	desc = merge_remote_util(parent);
 	if (!desc || !desc->obj)
 		return;
-	buf = read_sha1_file(desc->obj->oid.hash, &type, &size);
+	buf = read_object_file(&desc->obj->oid, &type, &size);
 	if (!buf || type != OBJ_TAG)
 		goto free_return;
 	len = parse_signature(buf, size);
@@ -1520,7 +1520,7 @@ int commit_tree_extended(const char *msg, size_t msg_len,
 	int encoding_is_utf8;
 	struct strbuf buffer;
 
-	assert_sha1_type(tree->hash, OBJ_TREE);
+	assert_oid_type(tree, OBJ_TREE);
 
 	if (memchr(msg, '\0', msg_len))
 		return error("a NUL byte in commit log message not allowed.");
