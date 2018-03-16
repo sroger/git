@@ -518,7 +518,8 @@ int parse_options_step(struct parse_opt_ctx_t *ctx,
 			while (ctx->opt) {
 				switch (parse_short_opt(ctx, options)) {
 				case -1:
-					goto show_usage_error;
+					//goto show_usage_error;
+                                        return -1;
 				case -2:
 					if (internal_help && *ctx->opt == 'h')
 						goto show_usage;
